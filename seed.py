@@ -6,7 +6,16 @@ from server import app
 
 def load_users():
     """Load users from u.user into database."""
-
+    user_data_file = open("seed_data/u.user")
+    user_data = user_data_file.read().split("\n")
+    for line in user_data:
+        user_data_list = line.split("|")
+        if user_data_list == ['']:
+            continue
+        user_id, age, zipcode = user_data_list[0], user_data_list[1], user_data_list[4]
+        new_user = User(user_id=user_id, age=age, zipcode=zipcode)
+        db.session.add(new_user)
+        db.session.commit()
 
 def load_movies():
     """Load movies from u.item into database."""
