@@ -30,6 +30,17 @@ def login():
 
     return render_template("login.html")
 
+@app.route('/TACO')
+def store_login():
+    """Handles submission of login form and add user id to session. Redirect to homepage with flash message"""
+    
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    if 'login' not in session:
+        session['login'] = {username: password}
+
+    # check if user is in database
 
 @app.route("/users")
 def user_list():
