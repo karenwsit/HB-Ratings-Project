@@ -30,17 +30,40 @@ def login():
 
     return render_template("login.html")
 
-@app.route('/TACO')
-def store_login():
+@app.route('/TACO', methods=["POST"])
+def site_login():
     """Handles submission of login form and add user id to session. Redirect to homepage with flash message"""
     
-    username = request.form.get('username')
+    email = request.form.get('email')
     password = request.form.get('password')
 
-    if 'login' not in session:
-        session['login'] = {username: password}
+    # add user to database
+    user = User(email=email, password=password)
+    db.session.add(user)
+    db.session.commit()
 
-    # check if user is in database
+    # get id of new user from database and put in session
+    user_id = User.query.filter_by(email=email).first()
+
+    if 'login' not in session:
+        session['login'] = [user_id]
+
+    flash('Thank you SO much for logging in! Now go rate some movies.')
+
+    return redirect('/')
+
+@app.route('/logout')
+def site_logout():
+    """Logs users out by deleting userid from session & redirect to homepage with flash message"""
+
+    # delete user from session
+    del session['login']
+
+    # redirect to homepage with a flash message
+
+    flash("You're logged out, loser. Thanks for nothing.")
+
+    return redirect('/')
 
 @app.route("/users")
 def user_list():
@@ -59,6 +82,6 @@ if __name__ == "__main__":
     connect_to_db(app)
 
     # Use the DebugToolbar
-    DebugToolbarExtension(app)
+    # DebugToolbarExtension(app)
 
     app.run()

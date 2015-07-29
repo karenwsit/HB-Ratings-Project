@@ -6,8 +6,20 @@
 
 <body>
   Ratings <<<<< so ugly
+  <body>
+
+    <ul>
+        {% for message in get_flashed_messages() %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+
+</body>
     <form action="/login">
         <input type="submit" value="Log In Here">
+    </form> <br>
+    <form action="/logout">
+        <input type="submit" value="Log Out Here">
     </form>
   <hr>
 
