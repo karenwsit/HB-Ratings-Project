@@ -24,33 +24,31 @@ def index():
 
     return render_template("homepage.html")
 
-@app.route('/login')
-def login():
-    """Login page"""
-
-    return render_template("login.html")
-
-@app.route('/TACO', methods=["POST"])
+@app.route('/login', methods=["GET", "POST"])
 def site_login():
     """Handles submission of login form and add user id to session. Redirect to homepage with flash message"""
     
-    email = request.form.get('email')
-    password = request.form.get('password')
+    if  request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
 
-    # add user to database
-    user = User(email=email, password=password)
-    db.session.add(user)
-    db.session.commit()
+        # add user to database
+        user = User(email=email, password=password)
+        db.session.add(user)
+        db.session.commit()
 
-    # get id of new user from database and put in session
-    user_id = User.query.filter_by(email=email).first()
+        # get id of new user from database and put in session
+        user_ob = User.query.filter_by(email=email).first()
 
-    if 'login' not in session:
-        session['login'] = [user_id]
+        if 'login' not in session:
+            session['login'] = user_ob.user_id
 
-    flash('Thank you SO much for logging in! Now go rate some movies.')
+        flash('Thank you SO much for logging in! Now go rate some movies.')
 
-    return redirect('/')
+        return redirect('/')
+
+    else:
+        return render_template("login.html")
 
 @app.route('/logout')
 def site_logout():
@@ -65,6 +63,7 @@ def site_logout():
 
     return redirect('/')
 
+
 @app.route("/users")
 def user_list():
     """Show list of users."""
@@ -72,6 +71,21 @@ def user_list():
     users = User.query.all()
     return render_template("user_list.html", users=users)
 
+
+@app.route("/users/<int:id>")
+def show_user(id):
+    """Return page showing details of a given user."""
+
+
+    # CONTINUE HERE - SQL ALCHEMY RELATIONSHIPS
+
+    # rating_ob = Rating.query.filter_by(user_id=id).all()
+    # movie_id = rating_ob.movie_id
+
+    # movies_reviewed_by_user = Movie.query.filter_by(movie_id=movie_id).all()
+
+
+    return render_template("user_details.html", users)
 
 
 if __name__ == "__main__":
