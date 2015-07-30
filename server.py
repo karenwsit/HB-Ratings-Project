@@ -72,20 +72,21 @@ def user_list():
     return render_template("user_list.html", users=users)
 
 
-@app.route("/users/<int:id>")
-def show_user(id):
+@app.route("/users/<int:user_id>")
+def show_user(user_id):
     """Return page showing details of a given user."""
 
+    user = User.query.get(user_id)
 
-    # CONTINUE HERE - SQL ALCHEMY RELATIONSHIPS
+    ratings_by_user = Rating.query.filter_by(user_id=user_id).all()
 
-    # rating_ob = Rating.query.filter_by(user_id=id).all()
-    # movie_id = rating_ob.movie_id
+    dict_titles_ratings = {}
 
-    # movies_reviewed_by_user = Movie.query.filter_by(movie_id=movie_id).all()
+    for r in ratings_by_user:
+          movie = Movie.query.filter_by(movie_id = r.movie_id).one()
+          dict_titles_ratings[movie.title] = r.score
 
-
-    return render_template("user_details.html", users)
+    return render_template("user_details.html", user=user, dict_titles_ratings=dict_titles_ratings)
 
 
 if __name__ == "__main__":
