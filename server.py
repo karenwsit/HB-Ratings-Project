@@ -85,12 +85,10 @@ def show_user(user_id):
     dict_titles_ratings = {}
 
     for r in ratings_by_user:
-          # r = <Rating movie=3434 user=343>
-          # movie = r.movie
           movie = Movie.query.filter_by(movie_id = r.movie_id).one()
-          dict_titles_ratings[movie.title] = r.score
+          dict_titles_ratings[movie.title] = [r.score, movie.movie_id]
 
-    return render_template("user_details.html", user=user, dict_titles_ratings=dict_titles_ratings, movie_id=r.movie_id)
+    return render_template("user_details.html", user=user, dict_titles_ratings=dict_titles_ratings)
 
 @app.route("/LEFTSHARK")
 def movie_list():
@@ -99,6 +97,13 @@ def movie_list():
     movies = Movie.query.order_by('title').all()
 
     return render_template("movie_list.html", movies=movies)
+
+
+@app.route("/rate-movie")
+def rate_movie():
+    """ Form for user to submit a new rating or update an existing rating. """
+
+    return render_template("")
 
 
 @app.route("/LEFTSHARK/<int:movie_id>")

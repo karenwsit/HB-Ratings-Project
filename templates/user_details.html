@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h2>User Deets!</h2>
+
+
+  <ul>
+        <li><div>Email: {{ user.email }} </div></li>
+        <li><div>Age: {{ user.age }}</div></li>
+        <li><div>Zipcode: {{ user.zipcode}} </div></li>
+
+        
+
+        <li><div>List of Movies Reviewed:
+        <ul> {% for movie in dict_titles_ratings %}
+          <li>
+            <a href="/LEFTSHARK/{{ dict_titles_ratings[movie][1] }}">
+            {{ movie }}</a> : {{ dict_titles_ratings[movie][0] }} </li>
+     
+        
+        {% endfor %}
+        <ul>
+      </div></li>
+
+   </ul>
+
+{% endblock %}

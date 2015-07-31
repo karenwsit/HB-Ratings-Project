@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h2>Movie Deets, Yo!</h2>
+    <h4>Movie Title: {{ title }} </h4>
+    <br>
+
+    <form action="/rate-movie">
+        <input type="submit" value="Rate This Movie">
+    </form> <br>
+
+
+  <ul>
+        <li><div>List of User and Ratings:
+        <ul> {% for user in dict_movie_ratings %}
+          <li>
+            <a href="/users/{{ user }}">
+              {{ user }} </a>: {{ dict_movie_ratings[user] }} </li>
+     
+        
+        {% endfor %}
+        <ul>
+      </div></li>
+
+   </ul>
+
+{% endblock %}

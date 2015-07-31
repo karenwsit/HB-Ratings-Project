@@ -47,7 +47,7 @@ def load_ratings():
         ratings_data_list = line.split("\t")
         if ratings_data_list == ['']:
             continue
-        movie_id, user_id, score = int(ratings_data_list[0]), int(ratings_data_list[1]), int(ratings_data_list[2])
+        user_id, movie_id, score = int(ratings_data_list[0]), int(ratings_data_list[1]), int(ratings_data_list[2])
         new_rating = Rating(movie_id=movie_id, user_id=user_id, score=score)
         db.session.add(new_rating)
     db.session.commit()
