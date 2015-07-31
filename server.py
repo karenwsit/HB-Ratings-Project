@@ -45,10 +45,12 @@ def site_login():
 
         flash('Thank you SO much for logging in! Now go rate some movies.')
 
-        return redirect('/')
+        # return redirect("/users/<int:user_id>")
+        return redirect("/users/%s" % user_ob.user_id)
 
     else:
         return render_template("login.html")
+
 
 @app.route('/logout')
 def site_logout():
@@ -77,16 +79,44 @@ def show_user(user_id):
     """Return page showing details of a given user."""
 
     user = User.query.get(user_id)
-
+    # ratings = u.ratings
     ratings_by_user = Rating.query.filter_by(user_id=user_id).all()
 
     dict_titles_ratings = {}
 
     for r in ratings_by_user:
+          # r = <Rating movie=3434 user=343>
+          # movie = r.movie
           movie = Movie.query.filter_by(movie_id = r.movie_id).one()
           dict_titles_ratings[movie.title] = r.score
 
-    return render_template("user_details.html", user=user, dict_titles_ratings=dict_titles_ratings)
+    return render_template("user_details.html", user=user, dict_titles_ratings=dict_titles_ratings, movie_id=r.movie_id)
+
+@app.route("/LEFTSHARK")
+def movie_list():
+    """Show list of movies"""
+
+    movies = Movie.query.order_by('title').all()
+
+    return render_template("movie_list.html", movies=movies)
+
+
+@app.route("/LEFTSHARK/<int:movie_id>")
+def show_movie(movie_id):
+    """ Return page showing details for a given movie. """
+
+    all_ratings_for_movie = Rating.query.filter_by(movie_id=movie_id).all()
+
+    movie = Movie.query.filter_by(movie_id=movie_id).one()
+    title = movie.title
+
+    dict_movie_ratings = {}
+
+    for r in all_ratings_for_movie:
+        user_id = r.user_id
+        dict_movie_ratings[user_id] = r.score
+
+    return render_template("movie_details.html", title=title, dict_movie_ratings=dict_movie_ratings)
 
 
 if __name__ == "__main__":
